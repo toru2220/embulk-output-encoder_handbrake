@@ -18,6 +18,7 @@ module Embulk
           "successful" => config.param("successful", :string),
           "failure" => config.param("failure", :string),
           "run" => config.param("run", :string, default: ""),
+          "limit" => config.param("limit", :integer, default: 99999),
         }
 
         # resumable output:
@@ -56,10 +57,17 @@ module Embulk
         successful = @task[:successful]
         failure = @task[:failure]
         run = @task[:run]
+        limit = @task[:limit]
      
         # output code:
-        page.each do |record|
-            
+        page.each_with_index do |record,i|
+          
+          puts "record count:%s" % i
+          if i >= limit then
+            puts "encode limit(%d). exit done." % limit
+            break
+          end
+   
           hash = Hash[schema.names.zip(record)]
           originalfile = hash[filename_column]
           basename = File.basename(originalfile, ".*")
@@ -78,7 +86,7 @@ module Embulk
  
           if run == "" then
             puts "encoded skipped. reason:dry run mode"
-            return
+            next
           end
           
           begin

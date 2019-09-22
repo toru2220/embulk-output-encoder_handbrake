@@ -19,6 +19,7 @@ TODO: Write short description here and embulk-output-encoder_handbrake.gemspec f
 - **successful**: move original file to successful directory if encode successful (string, required)
 - **failure**: move original file to failure directory if encode failure (string, required)
 - **run**: execute encode if set value (string, default: `""`)
+- **limit**: encode limit count (integer, default: `99999`)
 
 ## Example
 
