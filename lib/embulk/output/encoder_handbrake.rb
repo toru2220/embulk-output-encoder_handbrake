@@ -67,9 +67,14 @@ module Embulk
             puts "encode limit(%d). exit done." % limit
             break
           end
+          
+          puts "filename_column:%s" % filename_column
    
           hash = Hash[schema.names.zip(record)]
           originalfile = hash[filename_column]
+          
+          puts "originalfile:%s" % originalfile
+          
           basename = File.basename(originalfile, ".*")
           output = [basename,outputext].join(".")
           
@@ -101,8 +106,8 @@ module Embulk
             FileUtils.mkdir_p(File.dirname(successfulfile))
             FileUtils.mv(originalfile, successfulfile)  
             
-            puts "successful encoded:encode %s to %s" % [originalfile,successfulfile]
-            puts "move original file:move %s to %s" % [originalfile,outputfile]
+            puts "successful encoded:encode %s to %s" % [originalfile,outputfile]
+            puts "move original file:move %s to %s" % [originalfile,successfulfile]
             
           rescue => error
           
