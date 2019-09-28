@@ -19,6 +19,7 @@ module Embulk
           "failure" => config.param("failure", :string),
           "run" => config.param("run", :string, default: ""),
           "limit" => config.param("limit", :integer, default: 99999),
+          "useffmpeg" => config.param("useffmpeg", :string, default: ""),
         }
 
         # resumable output:
@@ -58,6 +59,7 @@ module Embulk
         failure = @task[:failure]
         run = @task[:run]
         limit = @task[:limit]
+        useffmpeg = @task[:useffmpeg]
      
         # output code:
         page.each_with_index do |record,i|
@@ -84,8 +86,18 @@ module Embulk
 
           puts originalfile
           puts outputfile
+
+          encode_command = ""
+
+          if useffmpeg == "" then
+            
+            encode_command = [command,"-i","\"%s\"" % originalfile,option,"-o","\"%s\"" % outputfile].join(" ")
           
-          encode_command = [command,option,"-i","\"%s\"" % originalfile,"-o","\"%s\"" % outputfile].join(" ")
+          else
+            
+            encode_command = [command,"-i","\"%s\"" % originalfile,option,"\"%s\"" % outputfile].join(" ")
+          
+          end
           
           puts "encode-command:%s" % encode_command
  
